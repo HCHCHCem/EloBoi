@@ -84,6 +84,25 @@ def main():
 
     print("=" * 55)
 
+    # --- Export to Excel ---
+    rows = []
+    for rank, (player, elo) in enumerate(sorted_players, 1):
+        w = wins.get(player, 0)
+        l = losses.get(player, 0)
+        rows.append({
+            "Rank": rank,
+            "Player": player,
+            "ELO": round(elo, 1),
+            "Wins": w,
+            "Losses": l,
+            "Games Played": w + l,
+            "Win %": f"{w / (w + l) * 100:.0f}%" if (w + l) > 0 else "0%",
+        })
+
+    out = pd.DataFrame(rows)
+    out.to_excel("ELO Rankings.xlsx", index=False, sheet_name="ELO Rankings")
+    print(f"\nRankings saved to: ELO Rankings.xlsx")
+
     # --- Print Game-by-Game History ---
     print(f"\n{'GAME-BY-GAME ELO PROGRESSION':^55}")
     print("=" * 55)
